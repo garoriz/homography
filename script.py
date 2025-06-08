@@ -71,8 +71,27 @@ if __name__ == "__main__":
         H = cv2.getPerspectiveTransform(src_corner_points, dst_corner_points)
         corrected_image = cv2.warpPerspective(image, H, (dst_width, dst_height))
 
-        cv2.imshow("Оригинал", image)
-        cv2.imshow("Исправленный документ", corrected_image)
+        h1, w1 = image.shape[:2]
+        h2, w2 = corrected_image.shape[:2]
+
+        target_height = max(h1, h2)
+
+
+        def resize_to_height(img, target_h):
+            h, w = img.shape[:2]
+            scale = target_h / h
+            new_w = int(w * scale)
+            return cv2.resize(img, (new_w, target_h))
+
+
+        image_resized = resize_to_height(image, target_height)
+        corrected_resized = resize_to_height(corrected_image, target_height)
+
+        separator = 255 * np.ones((target_height, 32, 3), dtype=np.uint8)
+
+        side_by_side = np.hstack([image_resized, separator, corrected_resized])
+
+        cv2.imshow("Сравнение: исходное и исправленное", side_by_side)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
     else:
