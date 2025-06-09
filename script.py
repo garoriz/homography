@@ -13,10 +13,6 @@ class CornerSelector:
         cv2.namedWindow(self.window_name)
         cv2.setMouseCallback(self.window_name, self._mouse_callback)
 
-        print("Инструкция:")
-        print("1. Кликните ЛКМ по 4 углам документа (по часовой стрелке от левого верхнего)")
-        print("2. После выбора 4 точек нажмите ESC")
-
         while True:
             cv2.imshow(self.window_name, self.display_image)
             key = cv2.waitKey(1) & 0xFF
@@ -57,7 +53,7 @@ if __name__ == "__main__":
         print("\nsrc_corner_points:")
         print(src_corner_points)
 
-        a4_aspect_ratio = 297 / 210  # ≈ 1.414
+        a4_aspect_ratio = 297 / 210
         dst_width = 600
         dst_height = int(dst_width * a4_aspect_ratio)
 
