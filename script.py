@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+# Выбор угловых точек
 class CornerSelector:
     def __init__(self, image, window_name="Выберите 4 угла"):
         self.image = image.copy()
@@ -49,6 +50,7 @@ if __name__ == "__main__":
     selector = CornerSelector(image)
     src_corner_points = selector.select_corners()
 
+    # Определение целевых размеров
     if src_corner_points is not None:
         print("\nsrc_corner_points:")
         print(src_corner_points)
@@ -64,7 +66,9 @@ if __name__ == "__main__":
             [0, dst_height - 1]
         ], dtype=np.float32)
 
+        # Расчет матрицы гомографии
         H = cv2.getPerspectiveTransform(src_corner_points, dst_corner_points)
+        # Применение преобразования
         corrected_image = cv2.warpPerspective(image, H, (dst_width, dst_height))
 
         h1, w1 = image.shape[:2]
@@ -85,6 +89,7 @@ if __name__ == "__main__":
 
         separator = 255 * np.ones((target_height, 32, 3), dtype=np.uint8)
 
+        # Визуализация
         side_by_side = np.hstack([image_resized, separator, corrected_resized])
 
         cv2.imshow("Сравнение: исходное и исправленное", side_by_side)
